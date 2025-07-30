@@ -1,0 +1,209 @@
+@using BTCPayServer.Abstractions.Extensions
+@using BTCPayServer.Plugins.SimpleSwap.Views
+@using BTCPayServer.Plugins.SimpleSwap.Model
+@using BTCPayServer.Client
+@using BTCPayServer.Services
+
+@inject BTCPayServer.Plugins.SimpleSwap.Services.SimpleSwapPluginService SimpleSwapPluginService
+@inject DisplayFormatter DisplayFormatter
+
+@model BTCPayServer.Plugins.SimpleSwap.Model.SimpleSwapModel
+@{
+    ViewData.SetActivePage(PluginNavPages.Index, "SimpleSwap plugin");
+}
+
+<div class="d-flex align-items-center mb-4">
+    <img src="/Resources/img/SimpleSwap.svg" alt="SimpleSwap" style="height: 40px; margin-right: 15px;" />
+    <div>
+        <h4 class="mb-1">SimpleSwap Plugin</h4>
+        <p class="text-muted mb-0">
+            Allows your customers to pay with altcoins using <a href="https://simpleswap.io" target="_blank">SimpleSwap service</a> in a seamless way.
+        </p>
+    </div>
+</div>
+
+<partial name="_StatusMessage" />
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Configuration</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <input asp-for="Settings.StoreId" type="hidden" />
+                    
+                    <div class="form-group mb-3">
+                        <div class="d-flex align-items-center">
+                            <input asp-for="@Model.Settings.Enabled" type="checkbox" class="btcpay-toggle me-3" />
+                            <label asp-for="@Model.Settings.Enabled" class="form-check-label">Enable SimpleSwap for this store</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label" asp-for="@Model.Settings.ApiKey">SimpleSwap API Key</label>
+                        <input asp-for="@Model.Settings.ApiKey" class="form-control" placeholder="Enter your SimpleSwap API key" />
+                        <span asp-validation-for="@Model.Settings.ApiKey" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label" asp-for="@Model.Settings.UserId">SimpleSwap User ID</label>
+                        <input asp-for="@Model.Settings.UserId" class="form-control" placeholder="Enter your SimpleSwap User ID" />
+                        <span asp-validation-for="@Model.Settings.UserId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label" asp-for="@Model.Settings.DefaultRefundAddress">Default Refund Address (Optional)</label>
+                        <input asp-for="@Model.Settings.DefaultRefundAddress" class="form-control" placeholder="BTC address for refunds" />
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label class="form-label" asp-for="@Model.Settings.MinimumSwapAmount">Minimum Swap Amount</label>
+                                <input asp-for="@Model.Settings.MinimumSwapAmount" class="form-control" type="number" step="0.001" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label class="form-label" asp-for="@Model.Settings.MaximumSwapAmount">Maximum Swap Amount</label>
+                                <input asp-for="@Model.Settings.MaximumSwapAmount" class="form-control" type="number" step="0.001" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label" asp-for="@Model.Settings.AcceptedCryptos">
+                            Accepted Cryptocurrencies (Hold Ctrl/Cmd to select multiple):
+                        </label>
+                        <select asp-for="@Model.Settings.AcceptedCryptos" class="form-select" size="15" multiple>
+                            <option value="ETH">Ethereum (ETH)</option>
+                            <option value="USDT">Tether (USDT)</option>
+                            <option value="USDC">USD Coin (USDC)</option>
+                            <option value="LTC">Litecoin (LTC)</option>
+                            <option value="BCH">Bitcoin Cash (BCH)</option>
+                            <option value="XRP">Ripple (XRP)</option>
+                            <option value="ADA">Cardano (ADA)</option>
+                            <option value="DOT">Polkadot (DOT)</option>
+                            <option value="LINK">Chainlink (LINK)</option>
+                            <option value="UNI">Uniswap (UNI)</option>
+                            <option value="MATIC">Polygon (MATIC)</option>
+                            <option value="AVAX">Avalanche (AVAX)</option>
+                            <option value="SOL">Solana (SOL)</option>
+                            <option value="ATOM">Cosmos (ATOM)</option>
+                            <option value="FTM">Fantom (FTM)</option>
+                            <option value="NEAR">NEAR Protocol (NEAR)</option>
+                            <option value="ALGO">Algorand (ALGO)</option>
+                            <option value="VET">VeChain (VET)</option>
+                            <option value="TRX">TRON (TRX)</option>
+                            <option value="EOS">EOS (EOS)</option>
+                            <option value="XLM">Stellar (XLM)</option>
+                            <option value="XMR">Monero (XMR)</option>
+                            <option value="ZEC">Zcash (ZEC)</option>
+                            <option value="DASH">Dash (DASH)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <button name="command" type="submit" value="save" class="btn btn-primary">Save Settings</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        @if (Model.Settings.Enabled && !string.IsNullOrEmpty(Model.Settings.ApiKey))
+        {
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Merchant Swap</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" asp-action="SwapMerchant">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">BTC Amount</label>
+                                    <input name="BtcAmount" class="form-control" type="number" step="0.001" required />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">To Cryptocurrency</label>
+                                    <select name="ToCrypto" class="form-select" required>
+                                        <option value="">Select cryptocurrency</option>
+                                        <option value="ETH">Ethereum (ETH)</option>
+                                        <option value="USDT">Tether (USDT)</option>
+                                        <option value="USDC">USD Coin (USDC)</option>
+                                        <option value="LTC">Litecoin (LTC)</option>
+                                        <option value="BCH">Bitcoin Cash (BCH)</option>
+                                        <option value="XRP">Ripple (XRP)</option>
+                                        <option value="ADA">Cardano (ADA)</option>
+                                        <option value="DOT">Polkadot (DOT)</option>
+                                        <option value="LINK">Chainlink (LINK)</option>
+                                        <option value="UNI">Uniswap (UNI)</option>
+                                        <option value="MATIC">Polygon (MATIC)</option>
+                                        <option value="AVAX">Avalanche (AVAX)</option>
+                                        <option value="SOL">Solana (SOL)</option>
+                                        <option value="ATOM">Cosmos (ATOM)</option>
+                                        <option value="FTM">Fantom (FTM)</option>
+                                        <option value="NEAR">NEAR Protocol (NEAR)</option>
+                                        <option value="ALGO">Algorand (ALGO)</option>
+                                        <option value="VET">VeChain (VET)</option>
+                                        <option value="TRX">TRON (TRX)</option>
+                                        <option value="EOS">EOS (EOS)</option>
+                                        <option value="XLM">Stellar (XLM)</option>
+                                        <option value="XMR">Monero (XMR)</option>
+                                        <option value="ZEC">Zcash (ZEC)</option>
+                                        <option value="DASH">Dash (DASH)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">To Address</label>
+                                    <input name="ToAddress" class="form-control" placeholder="Destination address" required />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success">Create Swap</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Recent Transactions</h5>
+            </div>
+            <div class="card-body">
+                @if (Model.Transactions.Any())
+                {
+                    <div class="list-group list-group-flush">
+                        @foreach (var transaction in Model.Transactions.Take(10))
+                        {
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <small class="text-muted">@transaction.FromCrypto → @transaction.ToCrypto</small><br />
+                                    <strong>@transaction.FromAmount @transaction.FromCrypto</strong><br />
+                                    <small class="text-muted">@transaction.CreatedAt.ToString("MMM dd, yyyy HH:mm")</small>
+                                </div>
+                                <span class="badge bg-@(transaction.Status == "completed" ? "success" : transaction.Status == "pending" ? "warning" : "secondary")">
+                                    @transaction.Status
+                                </span>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted">No transactions yet.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div> 
