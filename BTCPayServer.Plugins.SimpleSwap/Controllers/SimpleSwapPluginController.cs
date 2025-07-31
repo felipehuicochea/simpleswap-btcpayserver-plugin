@@ -1,12 +1,11 @@
-using BTCPayServer.Abstractions.Constants;
-using BTCPayServer.Client;
-using BTCPayServer.Plugins.SimpleSwap.Model;
-using BTCPayServer.Plugins.SimpleSwap.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
+using Microsoft.AspNetCore.Authorization;
+using BTCPayServer.Abstractions.Extensions;
+using BTCPayServer.Abstractions.Models;
+using BTCPayServer.Client;
 using System.Threading.Tasks;
-using System.Collections.Generic;
+
+
 
 namespace BTCPayServer.Plugins.SimpleSwap.Controllers
 {
