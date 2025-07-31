@@ -33,7 +33,15 @@ sudo apt-get install -y git
 
 ## 🔧 Deployment Steps
 
-### Option 1: Direct Deployment (Recommended for Testing)
+### Option 1: One-Command Deployment (Recommended)
+
+#### Quick Start
+```bash
+# Run this single command to deploy everything
+curl -sSL https://raw.githubusercontent.com/felipehuicochea/simpleswap-btcpayserver-plugin/master/deploy.sh | bash
+```
+
+### Option 2: Manual Deployment
 
 #### 1. Clone the Repository
 ```bash
@@ -41,7 +49,14 @@ git clone https://github.com/felipehuicochea/simpleswap-btcpayserver-plugin.git
 cd simpleswap-btcpayserver-plugin
 ```
 
-#### 2. Build the Project
+#### 2. Run the Deployment Script
+```bash
+# Make the script executable and run it
+chmod +x deploy.sh
+./deploy.sh
+```
+
+#### 3. Build the Project (if script fails)
 ```bash
 # Restore dependencies
 dotnet restore
@@ -53,7 +68,7 @@ dotnet build --configuration Release
 ls -la BTCPayServer/bin/Release/net8.0/
 ```
 
-#### 3. Run BTCPayServer with the Plugin
+#### 4. Run BTCPayServer with the Plugin
 ```bash
 # Navigate to BTCPayServer directory
 cd BTCPayServer
@@ -62,7 +77,7 @@ cd BTCPayServer
 dotnet run --configuration Release
 ```
 
-### Option 2: Docker Deployment
+### Option 3: Docker Deployment
 
 #### 1. Create Dockerfile
 ```dockerfile
@@ -146,7 +161,18 @@ docker run -d \
 
 ### Common Issues
 
-#### 1. Build Errors
+#### 1. "deploy.sh: No such file or directory"
+```bash
+# Make sure you're in the correct directory
+pwd
+ls -la
+
+# If you don't see deploy.sh, you're in the wrong directory
+cd simpleswap-btcpayserver-plugin
+ls -la deploy.sh
+```
+
+#### 2. Build Errors
 ```bash
 # Check .NET version
 dotnet --version
@@ -157,20 +183,20 @@ dotnet restore
 dotnet build --configuration Release
 ```
 
-#### 2. Plugin Not Showing
+#### 3. Plugin Not Showing
 - ✅ Verify plugin is in `BTCPayServer/Plugins/SimpleSwap/`
 - ✅ Check solution file includes the plugin
 - ✅ Restart BTCPayServer after plugin installation
 - ✅ Check logs: `docker logs btcpayserver | grep -i simpleswap`
 
-#### 3. API Connection Issues
+#### 4. API Connection Issues
 ```bash
 # Test SimpleSwap API connectivity
 cd BTCPayServer/Plugins/SimpleSwap
 python3 test-api.py
 ```
 
-#### 4. Database Migration Issues
+#### 5. Database Migration Issues
 - The plugin includes automatic database migrations
 - Check logs for migration errors
 - Ensure database has write permissions
