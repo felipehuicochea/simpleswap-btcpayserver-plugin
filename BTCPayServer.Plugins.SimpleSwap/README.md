@@ -19,11 +19,25 @@ A BTCPayServer plugin that allows customers to pay with altcoins using the Simpl
 4. Configure the plugin in your store settings
 
 ## Configuration
+### Option 1: Use Default Affiliate API Key (Recommended for Quick Start)
 
-### Prerequisites
+The plugin comes pre-configured with a default affiliate API key. This allows you to start using SimpleSwap immediately without creating your own account. A small commission will be credited to the plugin developers at no additional cost to you.
 
-1. **SimpleSwap Account**: You need a SimpleSwap account at [simpleswap.io](https://simpleswap.io)
-2. **API Credentials**: Get your API key and User ID from your SimpleSwap account
+**Benefits:**
+- No account creation required
+- Works out of the box
+- No additional fees for you
+- Quick setup
+
+### Option 2: Use Your Own SimpleSwap Account
+
+If you prefer to use your own SimpleSwap account:
+
+1. Go to [SimpleSwap](https://simpleswap.io/?ref=cf9858404d01) and sign up/login
+2. Navigate to your account settings → API section
+3. Generate a new API key
+4. Note your User ID (usually a number)
+5. Replace the default API key and User ID in the plugin settings 
 
 ### Setup Steps
 
