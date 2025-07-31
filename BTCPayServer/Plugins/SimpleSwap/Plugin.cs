@@ -1,9 +1,8 @@
+using Microsoft.Extensions.DependencyInjection;
 using BTCPayServer.Abstractions.Contracts;
 using BTCPayServer.Abstractions.Models;
 using BTCPayServer.Abstractions.Services;
-using BTCPayServer.Plugins.SimpleSwap.Services;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
+using BTCPayServer.Plugins.SimpleSwap.Data;
 
 namespace BTCPayServer.Plugins.SimpleSwap;
 

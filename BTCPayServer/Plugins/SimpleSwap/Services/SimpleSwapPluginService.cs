@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
-using BTCPayServer.Plugins.SimpleSwap.Model;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using BTCPayServer.Plugins.SimpleSwap.Data;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace BTCPayServer.Plugins.SimpleSwap.Services
 {
@@ -23,7 +24,15 @@ namespace BTCPayServer.Plugins.SimpleSwap.Services
         {
             using var context = _contextFactory.CreateContext();
             var settings = await context.SimpleSwapSettings.FirstOrDefaultAsync(s => s.StoreId == storeId);
-            return settings ?? new SimpleSwapSettings { StoreId = storeId };
+            return settings ?? new SimpleSwapSettings 
+            { 
+                StoreId = storeId,
+                ApiKey = "9bad34cc-9f86-4441-87b6-dd1cf60384ae",
+                UserId = "affiliate",
+                Enabled = true,
+                MinimumSwapAmount = 0.001f,
+                MaximumSwapAmount = 10.0f
+            };
         }
 
         public async Task UpdateSettings(SimpleSwapSettings settings)

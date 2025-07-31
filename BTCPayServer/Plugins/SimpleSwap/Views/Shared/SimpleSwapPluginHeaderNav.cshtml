@@ -2,6 +2,9 @@
 @using BTCPayServer.Abstractions.Models
 @using BTCPayServer.Plugins.SimpleSwap.Views
 @using Microsoft.AspNetCore.Mvc.Rendering
+
+@using BTCPayServer.Services
+
 @inject BTCPayServer.Services.StoresRepository StoresRepository
 @{
     var storeId = Context.GetRouteValue("storeId")?.ToString();

@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using BTCPayServer.Plugins.SimpleSwap.Model;
 
+using Newtonsoft.Json.Linq;
+using System.Linq;
+
 namespace BTCPayServer.Plugins.SimpleSwap.Services
 {
     public class SimpleSwapService

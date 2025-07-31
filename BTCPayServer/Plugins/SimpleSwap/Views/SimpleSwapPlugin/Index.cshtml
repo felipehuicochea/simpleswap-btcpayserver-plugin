@@ -4,6 +4,9 @@
 @using BTCPayServer.Client
 @using BTCPayServer.Services
 
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+
 @inject BTCPayServer.Plugins.SimpleSwap.Services.SimpleSwapPluginService SimpleSwapPluginService
 @inject DisplayFormatter DisplayFormatter
 
@@ -45,12 +48,20 @@
                         <label class="form-label" asp-for="@Model.Settings.ApiKey">SimpleSwap API Key</label>
                         <input asp-for="@Model.Settings.ApiKey" class="form-control" placeholder="Enter your SimpleSwap API key" />
                         <span asp-validation-for="@Model.Settings.ApiKey" class="text-danger"></span>
+                        <small class="form-text text-muted">
+                            <i class="fa fa-info-circle"></i> 
+                            A default affiliate API key is pre-configured. You can replace it with your own SimpleSwap API key if desired.
+                        </small>
                     </div>
 
                     <div class="form-group mb-3">
                         <label class="form-label" asp-for="@Model.Settings.UserId">SimpleSwap User ID</label>
                         <input asp-for="@Model.Settings.UserId" class="form-control" placeholder="Enter your SimpleSwap User ID" />
                         <span asp-validation-for="@Model.Settings.UserId" class="text-danger"></span>
+                        <small class="form-text text-muted">
+                            <i class="fa fa-info-circle"></i> 
+                            Set to "affiliate" by default. You can change this to your own User ID if you have a SimpleSwap account.
+                        </small>
                     </div>
 
                     <div class="form-group mb-3">

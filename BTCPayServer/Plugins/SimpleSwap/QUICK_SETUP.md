@@ -1,11 +1,24 @@
 # 🚀 Quick Setup Guide - SimpleSwap Plugin
 
-## Step 1: Get Your SimpleSwap Credentials
+## Step 1: Choose Your Setup Option
 
-1. Go to [simpleswap.io](https://simpleswap.io) and sign up/login
+### Option A: Quick Start (Recommended)
+The plugin comes pre-configured with a default affiliate API key. You can start using it immediately without any setup!
+
+**Benefits:**
+- ✅ No account creation required
+- ✅ Works out of the box
+- ✅ No additional fees
+- ✅ Quick setup
+
+### Option B: Use Your Own SimpleSwap Account
+If you prefer to use your own SimpleSwap account:
+
+1. Go to [SimpleSwap](https://simpleswap.io/?ref=cf9858404d01) and sign up/login
 2. Navigate to your account settings → API section
 3. Generate a new API key
-4. Note your User ID (usually a number)
+4. Note your User ID (usually a number) 
+
 
 ## Step 2: Test Your API Credentials
 

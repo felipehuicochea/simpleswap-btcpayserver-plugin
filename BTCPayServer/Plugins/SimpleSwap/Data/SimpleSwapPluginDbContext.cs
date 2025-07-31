@@ -1,6 +1,8 @@
 using BTCPayServer.Plugins.SimpleSwap.Model;
 using Microsoft.EntityFrameworkCore;
 
+using System;
+
 namespace BTCPayServer.Plugins.SimpleSwap.Data
 {
     public class SimpleSwapPluginDbContext : DbContext
