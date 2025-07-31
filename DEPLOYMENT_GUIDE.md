@@ -41,6 +41,8 @@ sudo apt-get install -y git
 curl -sSL https://raw.githubusercontent.com/felipehuicochea/simpleswap-btcpayserver-plugin/master/deploy.sh | bash
 ```
 
+**Note**: If you're running as root, the script will warn you but continue. For production environments, it's recommended to run as a non-root user.
+
 ### Option 2: Manual Deployment
 
 #### 1. Clone the Repository

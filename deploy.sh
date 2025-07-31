@@ -28,8 +28,11 @@ print_error() {
 
 # Check if running as root
 if [[ $EUID -eq 0 ]]; then
-   print_error "This script should not be run as root"
-   exit 1
+   print_warning "Running as root detected"
+   print_status "For security reasons, it's recommended to run as a non-root user"
+   print_status "However, we'll continue with root privileges..."
+   print_status "Press Ctrl+C to cancel or any key to continue..."
+   read -n 1 -s
 fi
 
 # Check system requirements
@@ -110,14 +113,24 @@ chmod +x run-btcpayserver.sh
 
 # Create systemd service (optional)
 print_status "Creating systemd service..."
-sudo tee /etc/systemd/system/btcpayserver.service > /dev/null << EOF
+if [[ $EUID -eq 0 ]]; then
+    # Running as root, use root user for service
+    SERVICE_USER="root"
+    SUDO_CMD=""
+else
+    # Running as regular user, use current user for service
+    SERVICE_USER="$USER"
+    SUDO_CMD="sudo"
+fi
+
+$SUDO_CMD tee /etc/systemd/system/btcpayserver.service > /dev/null << EOF
 [Unit]
 Description=BTCPayServer with SimpleSwap Plugin
 After=network.target
 
 [Service]
 Type=simple
-User=$USER
+User=$SERVICE_USER
 WorkingDirectory=$(pwd)/BTCPayServer
 ExecStart=/usr/bin/dotnet run --configuration Release
 Restart=always
@@ -133,7 +146,11 @@ print_status "Deployment completed successfully!"
 echo ""
 echo "🎉 Next steps:"
 echo "1. Start BTCPayServer: ./run-btcpayserver.sh"
-echo "2. Or enable systemd service: sudo systemctl enable btcpayserver && sudo systemctl start btcpayserver"
+if [[ $EUID -eq 0 ]]; then
+    echo "2. Or enable systemd service: systemctl enable btcpayserver && systemctl start btcpayserver"
+else
+    echo "2. Or enable systemd service: sudo systemctl enable btcpayserver && sudo systemctl start btcpayserver"
+fi
 echo "3. Access BTCPayServer at: http://localhost"
 echo "4. Configure SimpleSwap plugin in store settings"
 echo ""
