@@ -2,6 +2,11 @@ using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+
 namespace BTCPayServer.Plugins.SimpleSwap.Services
 {
     public class ApplicationPartsLogger : BackgroundService
