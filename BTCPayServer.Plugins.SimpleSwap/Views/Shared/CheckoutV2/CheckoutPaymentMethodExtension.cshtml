@@ -1,0 +1,26 @@
+@using BTCPayServer.Plugins.SimpleSwap.Services
+@inject SimpleSwapPluginService SimpleSwapPluginService
+@{
+    var storeId = Context.GetRouteValue("storeId")?.ToString();
+    if (string.IsNullOrEmpty(storeId))
+        return;
+    
+    var settings = await SimpleSwapPluginService.GetStoreSettings(storeId);
+    if (!settings.Enabled || settings.AcceptedCryptos == null || !settings.AcceptedCryptos.Any())
+        return;
+}
+<div class="payment-method-tab" data-payment-method="simpleswap">
+    <div class="payment-method-tab__header">
+        <div class="payment-method-tab__header-content">
+            <div class="payment-method-tab__header-content-left">
+                <div class="payment-method-tab__header-content-left-icon">
+                    <img src="/Resources/img/SimpleSwap.svg" alt="SimpleSwap" />
+                </div>
+                <div class="payment-method-tab__header-content-left-text">
+                    <div class="payment-method-tab__header-content-left-text-title">Pay with Altcoins</div>
+                    <div class="payment-method-tab__header-content-left-text-subtitle">via SimpleSwap</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
