@@ -87,8 +87,23 @@ else
     cd simpleswap-btcpayserver-plugin
 fi
 
+# Show current directory and contents for debugging
+print_status "Current directory: $(pwd)"
+print_status "Directory contents:"
+ls -la
+
 # Build the project
 print_status "Building BTCPayServer with SimpleSwap plugin..."
+
+# Check if we're in the right directory and have the solution file
+if [ ! -f "btcpayserver.sln" ]; then
+    print_error "Solution file not found in current directory: $(pwd)"
+    print_error "Files in current directory:"
+    ls -la
+    exit 1
+fi
+
+print_status "Found solution file. Building project..."
 dotnet restore
 dotnet build --configuration Release
 
@@ -97,6 +112,7 @@ if [ $? -eq 0 ]; then
     print_status "Build completed successfully!"
 else
     print_error "Build failed!"
+    print_error "Check the error messages above for details"
     exit 1
 fi
 
