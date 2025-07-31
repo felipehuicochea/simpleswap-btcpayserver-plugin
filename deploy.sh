@@ -81,7 +81,12 @@ print_status "Cloning SimpleSwap plugin repository..."
 if [ -d "simpleswap-btcpayserver-plugin" ]; then
     print_warning "Repository already exists. Updating..."
     cd simpleswap-btcpayserver-plugin
-    git pull origin master
+    
+    # Handle divergent branches by resetting to origin/master
+    print_status "Resolving git conflicts..."
+    git fetch origin
+    git reset --hard origin/master
+    git clean -fd
 else
     git clone https://github.com/felipehuicochea/simpleswap-btcpayserver-plugin.git
     cd simpleswap-btcpayserver-plugin
