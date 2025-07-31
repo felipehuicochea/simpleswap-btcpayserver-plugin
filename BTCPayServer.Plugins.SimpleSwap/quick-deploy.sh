@@ -19,4 +19,4 @@ fi
 
 # Make deploy.sh executable and run it
 chmod +x deploy.sh
-./deploy.shv
+./deploy.sh
